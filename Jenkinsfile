@@ -5,6 +5,10 @@ pipeline {
     tools {
         maven 'Maven'
     }
+    parameters {
+    choice(name: 'Version', choices: ['1.1', '1.2', '1.3'], description: 'Select the version')
+}
+
     stages {
         stage('init'){
             steps{
