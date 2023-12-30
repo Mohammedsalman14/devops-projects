@@ -1,23 +1,27 @@
 def gv
 pipeline {
-    
     agent any
     tools {
         maven 'Maven'
     }
     parameters {
-    choice(name: 'Version', choices: ['1.1', '1.2', '1.3'], description: 'Select the version')
-}
+        choice(name: 'Version', choices: ['1.1', '1.2', '1.3'], description: 'Select the version')
+    }
 
     stages {
-        stage('init'){
-            steps{
-                script{
-                    gv=load "script.groovy"
+        stage('init') {
+            steps {
+                script {
+                    gv = load 'script.groovy'
                 }
             }
         }
         stage('build') {
+            when {
+                        expression {
+                            params.Version
+                        }
+            }
             steps {
                 script {
                     gv.buildJar()
@@ -27,9 +31,9 @@ pipeline {
             steps {
                     script {
                             gv.buildImage()
-                        }
                     }
             }
+        }
         stage('deploy') {
             steps {
                 script {
