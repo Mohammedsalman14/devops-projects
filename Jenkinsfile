@@ -1,21 +1,34 @@
-pipeline{
+pipeline {
+    
     agent any
-    stages{
-        stage('build'){
-            steps{
-                echo "building the application"
-            }
-        }
-        stage('test'){
-            steps{
-                echo "testing the application"
-            }
-        }
-        stage('deploy'){
-            steps{
-                echo "deploying the application"
-            }
-        }
-        
+    tools {
+        maven 'Maven'
     }
-}
+    stages {
+        stage('build') {
+            steps {
+                script {
+                    echo 'building the application'
+                    sh 'mvn package'
+            }}
+            }
+        stage('build-dockerimage') {
+            steps {
+                    script {
+                        echo 'build the docker image...'
+                        withCredentials([usernamepassword(credentialsId:'dockerhub-repo', usernameVariable:'USER', passwordVariable:'PASSWD')]) {
+
+                            sh 'docker build -t salman14/mydevfirst:2.0 .'
+                            sh "echo $PASSWD | docker login -u $USER --password-stdin  "
+                            sh 'docker push salman14/mydevfirst:2.0'
+                }}
+                    }
+            }
+        stage('deploy') {
+            steps {
+                script {
+                    echo 'deploying the application'
+                }
+        }}
+        }
+        }
