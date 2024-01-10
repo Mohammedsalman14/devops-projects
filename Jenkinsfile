@@ -33,7 +33,7 @@ pipeline {
         stage('build-dockerimage') {
             steps {
                     script {
-                        buildImage()
+                        buildImage 'salman14/mydevfirst:3.0'
                     }
             }
         }
