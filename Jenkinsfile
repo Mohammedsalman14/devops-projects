@@ -1,4 +1,7 @@
 def gv
+
+@Library('jenkins-shared-library')_
+
 pipeline {
     agent any
     tools {
@@ -24,13 +27,13 @@ pipeline {
             }
             steps {
                 script {
-                    gv.buildJar()
+                    buildJar()
             }}
             }
         stage('build-dockerimage') {
             steps {
                     script {
-                            gv.buildImage()
+                        buildImage()
                     }
             }
         }
